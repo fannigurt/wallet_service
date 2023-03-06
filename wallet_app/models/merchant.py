@@ -14,7 +14,7 @@ class Merchant(Model):
     name = CharField(max_length=32)
     description = TextField(default="")
 
-    own_wallets = ManyToManyField("Wallet")
+    own_wallets = ManyToManyField("Wallet", related_name="own_by_merchant")
 
     class Meta:
         verbose_name = "Merchant"

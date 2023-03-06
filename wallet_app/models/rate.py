@@ -24,4 +24,7 @@ class Rate(Model):
         verbose_name_plural = "Rates"
 
     def __str__(self):
-        return f"<{self._meta.verbose_name}: 1.00 {self.from_ccy} > {self.rate_value} {self.to_ccy}>"
+        return (
+            f"<{self._meta.verbose_name}: "
+            f"1.00 {self.from_ccy} > {self.rate_value} {self.to_ccy}>"
+        )
