@@ -6,5 +6,5 @@ from django.urls import path
 from wallet_app.api.v1.default import default_handler
 
 urlpatterns = [
-    path("", default_handler),
+    path("", default_handler)
 ]

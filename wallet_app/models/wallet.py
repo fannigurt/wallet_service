@@ -1,7 +1,6 @@
 from django.db.models import (
     Model,
     CharField,
-    UUIDField,
     DateTimeField,
     BooleanField,
     ForeignKey,
@@ -9,8 +8,6 @@ from django.db.models import (
     PROTECT,
     Q,
 )
-
-from wallet_app.choices import MerchantsChoices, CurrenciesChoices
 
 
 class Wallet(Model):
@@ -21,7 +18,6 @@ class Wallet(Model):
     ccy = ForeignKey(
         "Currency",
         on_delete=PROTECT,
-        choices=CurrenciesChoices.choices,
         related_name="wallets",
     )
 
@@ -32,13 +28,12 @@ class Wallet(Model):
         help_text="Account name used in user interface",
     )
 
-    user_id = UUIDField(
+    user = CharField(
+        max_length=32,
         help_text="ID from User Service or any other User ID that we need",
         db_index=True,
     )
-    merchant_id = CharField(
-        max_length=32, choices=MerchantsChoices.choices, db_index=True
-    )
+    merchant = ForeignKey("Merchant", on_delete=PROTECT, related_name="user_wallets")
 
     is_active = BooleanField(default=True, help_text="For disable purposes")
     is_deleted = BooleanField(default=False, help_text="For delete purposes")
@@ -49,7 +44,7 @@ class Wallet(Model):
         verbose_name_plural = "Wallets"
         constraints = [
             UniqueConstraint(
-                fields=["user_id", "merchant_id", "user_id", "ccy"],
+                fields=["merchant", "user", "ccy"],
                 condition=Q(is_active=True),
                 name="unique_active_wallet_per_user_per_ccy",
                 violation_error_message=(
@@ -60,4 +55,4 @@ class Wallet(Model):
         ]
 
     def __str__(self):
-        return f"<{self.Meta.verbose_name} {self.pk=} {self.ccy=} {self.user_id=}>"
+        return f"<{self._meta.verbose_name} {self.pk} {self.ccy} {self.user}>"

@@ -1,5 +1,7 @@
 from django.db.models import Model, DateTimeField, DecimalField, ForeignKey, DO_NOTHING
 
+from wallet_app.constants import DECIMAL_PLACES, MAX_DIGITS
+
 
 class Rate(Model):
     created_on = DateTimeField(auto_now_add=True)
@@ -14,7 +16,7 @@ class Rate(Model):
         "Currency", on_delete=DO_NOTHING, null=False, related_name="rates_to"
     )
 
-    rate_value = DecimalField(max_digits=19, decimal_places=2)
+    rate_value = DecimalField(max_digits=MAX_DIGITS, decimal_places=DECIMAL_PLACES)
 
     class Meta:
         db_table = "rate"
